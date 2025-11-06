@@ -1,0 +1,37 @@
+# API Keys and Secrets
+.streamlit/secrets.toml
+.env
+*.env
+.env.*
+secrets.json
+config/secrets.*
+*.key
+*.pem
+
+# Environment-specific config files
+.env.local
+.env.development
+.env.staging
+.env.production
+
+# Hugging Face tokens
+.huggingface_token
+hf_token.txt
+
+# OpenAI and LLM API keys
+openai_key.txt
+anthropic_key.txt
+gemini_key.txt
+api_keys.json
+
+# Generated artifacts (CSV/PNG outputs, etc.)
+artifacts/
+
+# Python cache
+__pycache__/
+
+# Playwright browser cache
+.playwright/
+
+data/cache/
+*.png

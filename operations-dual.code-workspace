@@ -1,0 +1,18 @@
+{
+  "folders": [
+    {
+      "name": "operations-v2",
+      "path": "."
+    },
+    {
+      "name": "operations-v1",
+      "path": "../operations"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/__pycache__": true
+    }
+  }
+}

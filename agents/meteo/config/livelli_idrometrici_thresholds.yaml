@@ -1,0 +1,92 @@
+# OMIRL Livelli Idrometrici Thresholds Configuration
+# Minimal config: station codes mapped to alert thresholds (meters)
+# All other metadata (località, comune, provincia, bacino, etc.) is scraped from live OMIRL tables
+
+metadata:
+  version: "2.0"
+  last_updated: "2025-11-06"
+  source: "OMIRL Alert System - Regione Liguria"
+  description: "Alert thresholds for hydrometric stations across Liguria"
+  note: "Single source of truth for threshold values only. Geographic data comes from OMIRL scraping."
+
+# Station thresholds (meters) - indexed by station code
+# Format: STATION_CODE: { yellow: <meters>, red: <meters> }
+thresholds:
+  # Zona A (Ponente)
+  AIROL:  { yellow: 5.5, red: 7.1 }
+  MOBRA:  { yellow: 4.0, red: 4.8 }
+  CISAN:  { yellow: 2.8, red: 4.0 }
+  DCQUA:  { yellow: 4.0, red: 5.0 }
+  ISBON:  { yellow: 3.3, red: 4.3 }
+  AMERE:  { yellow: 3.0, red: 4.5 }
+  MONTL:  { yellow: 5.0, red: 7.0 }
+  PTECH:  { yellow: 4.0, red: 5.0 }
+  POGLI:  { yellow: 3.5, red: 5.0 }
+  RUGGE:  { yellow: 1.6, red: 2.7 }
+  TORRI:  { yellow: 2.5, red: 3.1 }
+  ARMEA:  { yellow: 1.3, red: 2.0 }
+  XXMPA:  { yellow: 1.3, red: 2.0 }
+  
+  # Zona B (Centro-Ponente)
+  BOLSN:  { yellow: 1.8, red: 2.5 }
+  ELLRA:  { yellow: 4.5, red: 5.3 }
+  GEFER:  { yellow: 1.3, red: 1.5 }
+  FIRPO:  { yellow: 3.0, red: 4.5 }
+  GEGEI:  { yellow: 2.0, red: 3.0 }
+  VAREN:  { yellow: 2.0, red: 3.0 }
+  GEMOL:  { yellow: 2.6, red: 3.5 }
+  GEPTX:  { yellow: 2.8, red: 4.2 }
+  GERIV:  { yellow: 3.8, red: 5.0 }
+  GSTUR:  { yellow: 1.5, red: 2.4 }
+  LAPRS:  { yellow: 2.5, red: 3.0 }
+  MOLIN:  { yellow: 2.4, red: 3.8 }
+  SANTU:  { yellow: 2.0, red: 3.2 }
+  SSGIU:  { yellow: 2.0, red: 2.7 }
+  
+  # Zona C (Centro-Levante)
+  AMEFM:  { yellow: 2.0, red: 3.3 }
+  BGNNE:  { yellow: 2.0, red: 3.0 }
+  BVARA:  { yellow: 2.8, red: 2.5 }  # Note: red < yellow - verify with source
+  CALAM:  { yellow: 4.0, red: 5.8 }
+  CAMIN:  { yellow: 1.9, red: 2.8 }
+  CARPB:  { yellow: 4.5, red: 5.5 }
+  FRNLA:  { yellow: 3.8, red: 5.0 }
+  LAMAC:  { yellow: 0.7, red: 1.2 }
+  NASCE:  { yellow: 4.5, red: 5.5 }
+  PANES:  { yellow: 2.6, red: 3.7 }
+  PBATT:  { yellow: 4.0, red: 5.0 }
+  PICCA:  { yellow: null, red: null }  # No threshold data available
+  PMAGR:  { yellow: 3.5, red: 5.0 }
+  PTEGL:  { yellow: 3.0, red: 4.0 }
+  SMART:  { yellow: 2.1, red: 3.1 }
+  SLEVA:  { yellow: 3.7, red: 4.7 }
+  SLPSS:  { yellow: 2.0, red: 3.2 }
+  SOLIE:  { yellow: 3.5, red: 4.5 }
+  VIGNO:  { yellow: 3.5, red: 4.5 }
+  
+  # Zona D (Padani di Ponente)
+  CAMPL:  { yellow: 2.5, red: 4.0 }
+  CARCA:  { yellow: 2.3, red: 2.8 }
+  CENGI:  { yellow: 3.0, red: 4.0 }
+  FERRA:  { yellow: 3.0, red: 3.5 }
+  MURIA:  { yellow: 2.0, red: 2.5 }
+  PCRIX:  { yellow: 4.0, red: 5.0 }
+  TIGLT:  { yellow: 3.5, red: 4.5 }
+  
+  # Zona E (Padani di Levante)
+  CABAN:  { yellow: 1.8, red: 2.5 }
+  MONTG:  { yellow: 4.0, red: 5.0 }
+  ROVPT:  { yellow: 3.5, red: 5.0 }
+  VOBBI:  { yellow: 3.5, red: 4.5 }
+
+# Threshold analysis configuration
+analysis_config:
+  # Percentage of yellow threshold to consider "near threshold" (watch status)
+  near_threshold_percentage: 0.85  # 85% of yellow threshold
+  
+  # Alert level mapping (Protezione Civile terminology)
+  alert_levels:
+    rossa: "red"          # Criticità elevata - Above red threshold (soglia 3 - pericolo)
+    gialla: "yellow"      # Criticità moderata - Above yellow threshold (soglia 2 - guardia)
+    pre-soglia: "near"    # Criticità ordinaria - Between 85% and 100% of yellow threshold (soglia 1)
+    verde: "below"        # Criticità assente - Below 85% of yellow threshold
