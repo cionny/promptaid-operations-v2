@@ -268,12 +268,6 @@ regions:
       - "Vernazza"
       - "Vezzano Ligure"
 
-    
-    # TODO: To be populated from Excel station data
-    stations_sensor_by_comune:
-        # TODO: Add complete station list
-      # TODO: Add all comuni with their stations
-
 # Geographic validation settings
 validation:
   case_sensitive: false

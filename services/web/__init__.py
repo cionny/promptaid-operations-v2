@@ -54,7 +54,7 @@ from .configs import (
     create_omirl_table_config
 )
 
-from .adapters import create_omirl_adapter, OMIRLAdapter
+from .adapters import OMIRLAdapter, get_omirl_adapter
 
 __all__ = [
     # New architecture
@@ -63,5 +63,5 @@ __all__ = [
     'GenericBrowserManager', 'create_browser_manager',
     'GenericTableScraper', 'create_table_scraper',
     'create_omirl_site_config', 'create_omirl_browser_config', 'create_omirl_table_config',
-    'create_omirl_adapter', 'OMIRLAdapter',
+    'OMIRLAdapter', 'get_omirl_adapter',
 ]

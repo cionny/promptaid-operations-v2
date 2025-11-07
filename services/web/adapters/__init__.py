@@ -17,6 +17,6 @@ Usage:
 
 """OMIRL web services adapters."""
 
-from .omirl_adapter import OMIRLAdapter, create_omirl_adapter, get_omirl_adapter
+from .omirl_adapter import OMIRLAdapter, get_omirl_adapter
 
-__all__ = ["OMIRLAdapter", "create_omirl_adapter", "get_omirl_adapter"]
+__all__ = ["OMIRLAdapter", "get_omirl_adapter"]

@@ -33,8 +33,7 @@ SYSTEM_PROMPT = (
 	"\n- comune: nome del comune"
 	"\n- bacino: nome del bacino idrografico"
 	"\n- corso_acqua: nome del corso d'acqua"
-	"\n- station_code: codice stazione OMIRL"
-	"\n\nEstrai i parametri dalla domanda e chiamalo strumento. "
+	"\n\nEstrai i parametri dalla domanda e chiama lo strumento. "
 	"Le query generiche (senza filtri) mostrano solo stazioni a rischio."
 )
 
@@ -58,7 +57,6 @@ class MeteoAgent:
 			comune: str | None = None,
 			bacino: str | None = None,
 			corso_acqua: str | None = None,
-			station_code: str | None = None,
 		) -> HydroStationsResult:
 			"""
 			Recupera i livelli idrometrici dalle stazioni OMIRL con classificazione delle allerte.
@@ -69,7 +67,6 @@ class MeteoAgent:
 				comune: Nome del comune
 				bacino: Nome del bacino idrografico
 				corso_acqua: Nome del corso d'acqua
-				station_code: Codice specifico della stazione
 			"""
 			print(f"\n🤖 AGENT CALLING TOOL: get_hydro_levels")
 			print(f"   Parameters extracted from query:")
@@ -79,7 +76,6 @@ class MeteoAgent:
 				"comune": comune,
 				"bacino": bacino,
 				"corso_acqua": corso_acqua,
-				"station_code": station_code,
 			}
 			for k, v in params.items():
 				if v:
@@ -91,7 +87,6 @@ class MeteoAgent:
 				comune=comune,
 				bacino=bacino,
 				corso_acqua=corso_acqua,
-				station_code=station_code,
 			)
 			return await fetch_hydro_stations(filters)
 
