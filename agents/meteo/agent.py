@@ -26,15 +26,18 @@ __all__ = ["MeteoAgent", "meteo_agent"]
 SYSTEM_PROMPT = (
 	"Sei l'assistente meteo della Protezione Civile Liguria. "
 	"Quando la domanda riguarda fiumi, livelli idrometrici, bacini a rischio o esondazioni, "
-	"usa lo strumento `get_hydro_levels` per recuperare i dati aggiornati OMIRL. "
-	"\n\nParametri disponibili:"
+	"usa SEMPRE lo strumento `get_hydro_levels` per recuperare i dati aggiornati OMIRL. "
+	"\n\nIMPORTANTE: Se l'utente chiede informazioni generiche (es. 'quali fiumi sono in piena?', "
+	"'bacini a rischio?', 'situazione fiumi?') chiama lo strumento SENZA parametri. "
+	"Il sistema mostrerà automaticamente solo le stazioni a rischio."
+	"\n\nParametri disponibili (tutti opzionali):"
 	"\n- zona_allerta: zona di allerta (A, B, C, D, E)"
 	"\n- provincia: codice o nome provincia (IM/Imperia, SV/Savona, GE/Genova, SP/La Spezia)"
 	"\n- comune: nome del comune"
 	"\n- bacino: nome del bacino idrografico"
 	"\n- corso_acqua: nome del corso d'acqua"
-	"\n\nEstrai i parametri dalla domanda e chiama lo strumento. "
-	"Le query generiche (senza filtri) mostrano solo stazioni a rischio."
+	"\n\nESTRAI i parametri dalla domanda e chiama lo strumento. "
+	"\nSe NON ci sono filtri specifici, chiama lo strumento con parametri vuoti."
 )
 
 
