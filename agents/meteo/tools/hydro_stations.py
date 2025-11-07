@@ -12,8 +12,7 @@ from agents.meteo.models import RawHydroStation, EnrichedHydroStation, HydroStat
 from services.web.adapters.omirl_adapter import get_omirl_adapter
 
 CONFIG_ROOT = Path(__file__).resolve().parent.parent / "config"
-THRESHOLDS_PATH = CONFIG_ROOT / "livelli_idrometrici_thresholds.yaml"
-GEOGRAPHY_PATH = CONFIG_ROOT / "geography.yaml"
+CONFIG_PATH = CONFIG_ROOT / "meteo_config.yaml"
 
 
 class HydroFilters(BaseModel):
@@ -27,17 +26,20 @@ class HydroFilters(BaseModel):
 
 @lru_cache(maxsize=1)
 def _load_thresholds() -> tuple[Dict[str, Dict[str, Any]], float]:
-    """Load threshold config (cached)."""
-    with open(THRESHOLDS_PATH) as f:
+    """Load threshold config from unified meteo_config.yaml (cached)."""
+    with open(CONFIG_PATH) as f:
         data = yaml.safe_load(f)
-    return data['thresholds'], data['analysis_config']['near_threshold_percentage']
+        thresholds = data['tools']['hydro_stations']['thresholds']
+        near_ratio = data['tools']['hydro_stations']['analysis_config']['near_threshold_percentage']
+        return thresholds, near_ratio
 
 
 @lru_cache(maxsize=1)
 def _load_geography() -> Dict[str, Any]:
-    """Load geography config (cached)."""
-    with open(GEOGRAPHY_PATH) as f:
-        return yaml.safe_load(f)['regions']['liguria']
+    """Load geography config from unified meteo_config.yaml (cached)."""
+    with open(CONFIG_PATH) as f:
+        data = yaml.safe_load(f)
+        return data.get('geography', {})
 
 
 def _enrich_station(raw: RawHydroStation) -> EnrichedHydroStation:

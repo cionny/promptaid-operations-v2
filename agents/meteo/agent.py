@@ -13,6 +13,11 @@ from .tools.hydro_stations import (
 	HydroStationsResult,
 	fetch_hydro_stations,
 )
+from .tools.rain_stations import (
+	RainFilters,
+	RainStationsResult,
+	fetch_rain_stations,
+)
 
 # Load environment variables
 load_dotenv()
@@ -25,19 +30,24 @@ __all__ = ["MeteoAgent", "meteo_agent"]
 
 SYSTEM_PROMPT = (
 	"Sei l'assistente meteo della Protezione Civile Liguria. "
-	"Quando la domanda riguarda fiumi, livelli idrometrici, bacini a rischio o esondazioni, "
-	"usa SEMPRE lo strumento `get_hydro_levels` per recuperare i dati aggiornati OMIRL. "
-	"\n\nIMPORTANTE: Se l'utente chiede informazioni generiche (es. 'quali fiumi sono in piena?', "
-	"'bacini a rischio?', 'situazione fiumi?') chiama lo strumento SENZA parametri. "
-	"Il sistema mostrerà automaticamente solo le stazioni a rischio."
-	"\n\nParametri disponibili (tutti opzionali):"
+	"Hai accesso a due strumenti principali:\n\n"
+	"1. LIVELLI IDROMETRICI (get_hydro_levels): Per domande su fiumi, livelli idrometrici, bacini a rischio, esondazioni.\n"
+	"2. PRECIPITAZIONI (get_rain_data): Per domande su pioggia, accumuli, precipitazioni.\n\n"
+	"IMPORTANTE: Se la domanda è generica (es. 'situazione fiumi?', 'dove piove forte?'), "
+	"chiama lo strumento SENZA parametri per vedere automaticamente solo le criticità."
+	"\n\n--- LIVELLI IDROMETRICI ---"
+	"\nParametri disponibili (tutti opzionali):"
 	"\n- zona_allerta: zona di allerta (A, B, C, D, E)"
 	"\n- provincia: codice o nome provincia (IM/Imperia, SV/Savona, GE/Genova, SP/La Spezia)"
 	"\n- comune: nome del comune"
 	"\n- bacino: nome del bacino idrografico"
 	"\n- corso_acqua: nome del corso d'acqua"
-	"\n\nESTRAI i parametri dalla domanda e chiama lo strumento. "
-	"\nSe NON ci sono filtri specifici, chiama lo strumento con parametri vuoti."
+	"\n\n--- PRECIPITAZIONI ---"
+	"\nParametri disponibili (tutti opzionali):"
+	"\n- zona_allerta: zona di allerta (A, B, C, D, E)"
+	"\n- provincia: nome completo provincia (Genova, Savona, Imperia, La Spezia) - NON codici a 2 lettere"
+	"\n- time_period: periodo temporale (15', 30', 1h, 3h, 6h, 12h, 24h, 7d, 15d, 30d) - default 1h"
+	"\n\nESTRAI i parametri dalla domanda e chiama lo strumento appropriato."
 )
 
 
@@ -92,6 +102,40 @@ class MeteoAgent:
 				corso_acqua=corso_acqua,
 			)
 			return await fetch_hydro_stations(filters)
+		
+		# Register the rain data tool
+		@self.agent.tool
+		async def get_rain_data(
+			ctx: RunContext[None],
+			zona_allerta: str | None = None,
+			provincia: str | None = None,
+			time_period: str = "1h",
+		) -> RainStationsResult:
+			"""
+			Recupera i dati di precipitazione dalle stazioni OMIRL con classificazione delle allerte.
+			
+			Args:
+				zona_allerta: Zona di allerta (A, B, C, D, E)
+				provincia: Nome completo della provincia (Genova, Savona, Imperia, La Spezia)
+				time_period: Periodo temporale (15', 30', 1h, 3h, 6h, 12h, 24h, 7d, 15d, 30d)
+			"""
+			print(f"\n🤖 AGENT CALLING TOOL: get_rain_data")
+			print(f"   Parameters extracted from query:")
+			params = {
+				"zona_allerta": zona_allerta,
+				"provincia": provincia,
+				"time_period": time_period,
+			}
+			for k, v in params.items():
+				if v:
+					print(f"      {k}: {v}")
+			
+			filters = RainFilters(
+				zona_allerta=zona_allerta,
+				provincia=provincia,
+				time_period=time_period,
+			)
+			return await fetch_rain_stations(filters)
 
 	async def run(self, query: str) -> Any:
 		"""Process a natural-language query and return structured hydrometric data."""
@@ -117,6 +161,12 @@ class MeteoAgent:
 
 		filter_model = HydroFilters(**filters)
 		return await fetch_hydro_stations(filter_model)
+	
+	async def rain_data(self, **filters: Any) -> RainStationsResult:
+		"""Direct access to the rain data tool with structured filters."""
+
+		filter_model = RainFilters(**filters)
+		return await fetch_rain_stations(filter_model)
 
 
 # Global singleton instance

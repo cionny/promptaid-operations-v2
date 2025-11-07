@@ -42,3 +42,38 @@ class HydroStationsResult(BaseModel):
     watch_count: int
     filters_applied: Dict[str, Any]
     timestamp: datetime = Field(default_factory=datetime.now)
+
+
+class RawRainData(BaseModel):
+    """Direct mapping from OMIRL rain table scraping - no enrichment."""
+    
+    location: str  # zona or provincia name
+    location_type: Literal["zona", "provincia"]
+    accumulation_mm: Dict[str, Optional[float]]  # e.g., {"1h": 5.2, "3h": 12.1, ...}
+
+
+class EnrichedRainData(BaseModel):
+    """Single time period with threshold analysis."""
+    
+    location: str
+    location_type: Literal["zona", "provincia"]
+    accumulation_mm: float
+    time_period: str
+    alert_level: Literal["verde", "gialla", "rossa"]
+    soglia_gialla: Optional[float] = None
+    soglia_rossa: Optional[float] = None
+    percentuale_soglia: Optional[float] = None
+
+
+class RainStationsResult(BaseModel):
+    """Final tool output."""
+    
+    data: List[EnrichedRainData]
+    summary: str
+    critical_count: int
+    warning_count: int
+    max_accumulation_mm: float
+    max_location: str
+    time_period: str
+    filters_applied: Dict[str, Any]
+    timestamp: datetime = Field(default_factory=datetime.now)
