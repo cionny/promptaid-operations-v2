@@ -1,0 +1,19 @@
+[theme]
+primaryColor = "#EF7D00"
+backgroundColor = "#F5F5F5"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#212121"
+font = "sans serif"
+
+# Civil Protection Colors:
+# Blue (Blu): #004070 - Headers, titles, institutional UI
+# Orange (Arancio): #EF7D00 - Active states, primary actions
+# Alert colors: Green #2E7D32, Yellow #F9A825, Red #C62828
+
+[server]
+headless = true
+port = 8501
+enableCORS = false
+
+[browser]
+gatherUsageStats = false

@@ -1,0 +1,19 @@
+# PromptAId Operations v2 - Requirements
+# Core dependencies for Phase 1 MVP
+
+# Streamlit for UI
+streamlit>=1.28.0
+
+# Backend dependencies (already in use)
+pydantic-ai>=0.0.13
+pydantic>=2.0.0
+playwright>=1.40.0
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# Data processing
+pandas>=2.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

@@ -41,13 +41,16 @@ SYSTEM_PROMPT = (
 	"\n- provincia: codice o nome provincia (IM/Imperia, SV/Savona, GE/Genova, SP/La Spezia)"
 	"\n- comune: nome del comune"
 	"\n- bacino: nome del bacino idrografico"
-	"\n- corso_acqua: nome del corso d'acqua"
+	"\n- corso_acqua: nome SPECIFICO del corso d'acqua (es. 'Roia', 'Arroscia') - NON parole generiche come 'fiume'"
 	"\n\n--- PRECIPITAZIONI ---"
 	"\nParametri disponibili (tutti opzionali):"
 	"\n- zona_allerta: zona di allerta (A, B, C, D, E)"
 	"\n- provincia: nome completo provincia (Genova, Savona, Imperia, La Spezia) - NON codici a 2 lettere"
 	"\n- time_period: periodo temporale (15', 30', 1h, 3h, 6h, 12h, 24h, 7d, 15d, 30d) - default 1h"
-	"\n\nESTRAI i parametri dalla domanda e chiama lo strumento appropriato."
+	"\n\nREGOLE DI ESTRAZIONE:"
+	"\n- NON estrarre parole generiche come 'fiume', 'pioggia', 'meteo' come parametri"
+	"\n- Estrai SOLO nomi specifici di luoghi (comuni, corsi d'acqua, bacini, stazioni e località)"
+	"\n- Se la domanda è generica, NON passare parametri (per vedere solo criticità)"
 )
 
 
@@ -154,7 +157,21 @@ class MeteoAgent:
 		print(f"Result type: {type(run_result.output)}")
 		print(f"All messages: {len(run_result.all_messages())} total")
 		
-		return run_result.output
+		# Debug: Show all messages (safe attribute access)
+		for i, msg in enumerate(run_result.all_messages()):
+			print(f"\n--- Message {i+1} ---")
+			print(f"Type: {type(msg).__name__}")
+			if hasattr(msg, 'role'):
+				print(f"Role: {msg.role}")
+			if hasattr(msg, 'content'):
+				content = msg.content
+				if isinstance(content, str):
+					print(f"Content: {content[:200]}")
+				else:
+					print(f"Content: {content}")
+		
+		# Return the full run_result for metadata extraction
+		return run_result
 
 	async def hydro_levels(self, **filters: Any) -> HydroStationsResult:
 		"""Direct access to the hydro levels tool with structured filters."""

@@ -106,20 +106,45 @@ def _apply_filters(stations: list[EnrichedHydroStation], filters: HydroFilters) 
 
 def _build_summary(stations: list[EnrichedHydroStation]) -> str:
     """Template-based summary - no LLM, no v1."""
+    if not stations:
+        return "❌ Nessuna stazione trovata con i filtri specificati"
+    
     critical = [s for s in stations if s.alert_level == "rossa"]
     warning = [s for s in stations if s.alert_level == "gialla"]
     watch = [s for s in stations if s.alert_level == "pre-soglia"]
+    normal = [s for s in stations if s.alert_level == "verde"]
     
+    # Build summary based on alert levels
     if critical:
         names = ', '.join(s.localita for s in critical[:3])
-        return f"🚨 {len(critical)} stazioni in CRITICITÀ ROSSA: {names}"
+        summary = f"🚨 {len(critical)} stazioni in CRITICITÀ ROSSA: {names}"
     elif warning:
         names = ', '.join(s.localita for s in warning[:3])
-        return f"⚠️ {len(warning)} stazioni in CRITICITÀ GIALLA: {names}"
+        summary = f"⚠️ {len(warning)} stazioni in CRITICITÀ GIALLA: {names}"
     elif watch:
-        return f"👀 {len(watch)} stazioni da monitorare (pre-soglia)"
+        summary = f"👀 {len(watch)} stazioni da monitorare (pre-soglia)"
     else:
-        return f"✅ Nessuna criticità ({len(stations)} stazioni monitorate)"
+        summary = f"✅ I livelli idrometrici sono nella norma"
+    
+    # If specific stations requested (1-3 stations), add detailed info
+    if len(stations) <= 3:
+        summary += "\n\n**Dettagli stazioni:**\n"
+        for s in stations:
+            alert_emoji = {"verde": "✅", "pre-soglia": "👀", "gialla": "⚠️", "rossa": "🚨"}.get(s.alert_level, "")
+            summary += f"\n{alert_emoji} **{s.localita}** ({s.corso_acqua})"
+            
+            # Show max 24h if available
+            if s.max_24h is not None:
+                summary += f"\n- Massimo nelle 24h: {s.max_24h:.2f} m"
+            
+            # Show current level if available
+            if s.current_level is not None:
+                time_str = f" ({s.current_time})" if s.current_time else ""
+                summary += f"\n- Valore all'ora di riferimento: {s.current_level:.2f} m{time_str}"
+            
+            summary += f"\n- Livello allerta: {s.alert_level}"
+    
+    return summary
 
 
 async def fetch_hydro_stations(filters: HydroFilters) -> HydroStationsResult:
