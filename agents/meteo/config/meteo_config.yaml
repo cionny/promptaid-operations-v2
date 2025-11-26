@@ -50,249 +50,6 @@ geography:
       name: "Bacini Padani di Levante"
       description: "Po Valley basins - eastern Liguria (northern Genova, northern La Spezia)"
 
-  # Comuni grouped by province (for comune-level filtering)
-  comuni_by_province:
-    GE:
-      - Arenzano
-      - Avegno
-      - Bargagli
-      - Bogliasco
-      - Borzonasca
-      - Busalla
-      - Camogli
-      - Campo Ligure
-      - Campomorone
-      - Carasco
-      - Casarza Ligure
-      - Casella
-      - Castiglione Chiavarese
-      - Ceranesi
-      - Chiavari
-      - Cicagna
-      - Cogoleto
-      - Cogorno
-      - Coreglia Ligure
-      - Crocefieschi
-      - Davagna
-      - Fascia
-      - Favale di Malvaro
-      - Fontanigorda
-      - Genova
-      - Gorreto
-      - Isola del Cantone
-      - Lavagna
-      - Leivi
-      - Lorsica
-      - Lumarzo
-      - Masone
-      - Mele
-      - Mezzanego
-      - Mignanego
-      - Moconesi
-      - Moneglia
-      - Montebruno
-      - Montoggio
-      - Ne
-      - Neirone
-      - Orero
-      - Pieve Ligure
-      - Portofino
-      - Propata
-      - Rapallo
-      - Recco
-      - Rezzoaglio
-      - Ronco Scrivia
-      - Rondanina
-      - Rossiglione
-      - Rovegno
-      - San Colombano Certenoli
-      - Sant'Olcese
-      - Santa Margherita Ligure
-      - Santo Stefano d'Aveto
-      - Savignone
-      - Serra Riccò
-      - Sestri Levante
-      - Sori
-      - Tiglieto
-      - Torriglia
-      - Tribogna
-      - Uscio
-      - Valbrevenna
-      - Vobbia
-      - Zoagli
-    SV:
-      - Alassio
-      - Albenga
-      - Albisola Superiore
-      - Albissola Marina
-      - Altare
-      - Andora
-      - Arnasco
-      - Balestrino
-      - Bardineto
-      - Bergeggi
-      - Boissano
-      - Borghetto Santo Spirito
-      - Borgio Verezzi
-      - Bormida
-      - Cairo Montenotte
-      - Calice Ligure
-      - Calizzano
-      - Carcare
-      - Casanova Lerrone
-      - Castelbianco
-      - Castelvecchio di Rocca Barbena
-      - Celle Ligure
-      - Cengio
-      - Ceriale
-      - Cisano sul Neva
-      - Cosseria
-      - Dego
-      - Ellera
-      - Erli
-      - Finale Ligure
-      - Garlenda
-      - Giustenice
-      - Giusvalla
-      - Laigueglia
-      - Loano
-      - Magliolo
-      - Mallare
-      - Massimino
-      - Millesimo
-      - Mioglia
-      - Murialdo
-      - Nasino
-      - Noli
-      - Onzo
-      - Orco Feglino
-      - Ortovero
-      - Osiglia
-      - Pallare
-      - Piana Crixia
-      - Pietra Ligure
-      - Plodio
-      - Pontinvrea
-      - Quiliano
-      - Rialto
-      - Roccavignale
-      - Sassello
-      - Savona
-      - Spotorno
-      - Stella
-      - Stellanello
-      - Testico
-      - Toirano
-      - Tovo San Giacomo
-      - Urbe
-      - Varazze
-      - Vado Ligure
-      - Vallecrosia
-      - Vendone
-      - Vezzi Portio
-      - Villanova d'Albenga
-      - Zuccarello
-    IM:
-      - Airole
-      - Apricale
-      - Aquila d'Arroscia
-      - Armo
-      - Aurigo
-      - Badalucco
-      - Bajardo
-      - Bordighera
-      - Borghetto d'Arroscia
-      - Borgomaro
-      - Camporosso
-      - Caravonica
-      - Castellaro
-      - Castel Vittorio
-      - Ceriana
-      - Cervo
-      - Cesio
-      - Chiusanico
-      - Chiusavecchia
-      - Cipressa
-      - Civezza
-      - Cosio d'Arroscia
-      - Costarainera
-      - Diano Arentino
-      - Diano Castello
-      - Diano Marina
-      - Diano San Pietro
-      - Dolceacqua
-      - Dolcedo
-      - Imperia
-      - Isolabona
-      - Lucinasco
-      - Mendatica
-      - Molini di Triora
-      - Montalto Ligure
-      - Montegrosso Pian Latte
-      - Olivetta San Michele
-      - Ospedaletti
-      - Perinaldo
-      - Pietrabruna
-      - Pieve di Teco
-      - Pigna
-      - Pompeiana
-      - Pontedassio
-      - Pornassio
-      - Prelà
-      - Ranzo
-      - Rezzo
-      - Riva Ligure
-      - Rocchetta Nervina
-      - San Bartolomeo al Mare
-      - San Biagio della Cima
-      - San Lorenzo al Mare
-      - Sanremo
-      - Santo Stefano al Mare
-      - Seborga
-      - Soldano
-      - Taggia
-      - Terzorio
-      - Triora
-      - Vallebona
-      - Vallecrosia
-      - Vasia
-      - Ventimiglia
-      - Vessalico
-      - Villa Faraldi
-      - Villatalla
-    SP:
-      - Ameglia
-      - Arcola
-      - Beverino
-      - Bolano
-      - Bonassola
-      - Borghetto di Vara
-      - Brugnato
-      - Calice al Cornoviglio
-      - Carro
-      - Carrodano
-      - Castelnuovo Magra
-      - Deiva Marina
-      - Follo
-      - Framura
-      - La Spezia
-      - Lerici
-      - Levanto
-      - Maissana
-      - Monterosso al Mare
-      - Pignone
-      - Portovenere
-      - Riccò del Golfo di Spezia
-      - Riomaggiore
-      - Rocchetta di Vara
-      - Santo Stefano di Magra
-      - Sarzana
-      - Sesta Godano
-      - Varese Ligure
-      - Vernazza
-      - Vezzano Ligure
-      - Zignago
-
 # ============================================================================
 # TOOL-SPECIFIC CONFIGURATIONS
 # Each tool has its own thresholds, analysis rules, and defaults
@@ -407,131 +164,97 @@ tools:
           - "ultimi 15 min"
           - "ultimo quarto d'ora"
         thresholds:
-          green:
-            max: 10
-          yellow:
-            min: 10
-            max: 16
-          red:
-            min: 16
+          green: { max: 10 }
+          yellow: { min: 10, max: 16 }
+          red: { min: 16 }
+      
       "30'":
         labels:
           - "ultimi 30 minuti"
           - "ultimi 30 min"
           - "ultima mezz'ora"
         thresholds:
-          green:
-            max: 15
-          yellow:
-            min: 15
-            max: 30
-          red:
-            min: 30
+          green: { max: 15 }
+          yellow: { min: 15, max: 30 }
+          red: { min: 30 }
+      
       "1h":
         labels:
           - "ultima ora"
           - "ultimi 60 minuti"
         thresholds:
-          green:
-            max: 25
-          yellow:
-            min: 25
-            max: 40
-          red:
-            min: 40
+          green: { max: 25 }
+          yellow: { min: 25, max: 40 }
+          red: { min: 40 }
+      
       "3h":
         labels:
           - "ultime 3 ore"
           - "ultime tre ore"
         thresholds:
-          green:
-            max: 50
-          yellow:
-            min: 50
-            max: 80
-          red:
-            min: 80
+          green: { max: 50 }
+          yellow: { min: 50, max: 80 }
+          red: { min: 80 }
+      
       "6h":
         labels:
           - "ultime 6 ore"
           - "ultime sei ore"
         thresholds:
-          green:
-            max: 70
-          yellow:
-            min: 70
-            max: 100
-          red:
-            min: 100
+          green: { max: 70 }
+          yellow: { min: 70, max: 100 }
+          red: { min: 100 }
+      
       "12h":
         labels:
           - "ultime 12 ore"
           - "ultime dodici ore"
         thresholds:
-          green:
-            max: 120
-          yellow:
-            min: 120
-            max: 180
-          red:
-            min: 180
+          green: { max: 120 }
+          yellow: { min: 120, max: 180 }
+          red: { min: 180 }
+      
       "24h":
         labels:
           - "ultime 24 ore"
           - "ultimo giorno"
         thresholds:
-          green:  
-            max: 150
-          yellow:
-            min: 150
-            max: 225
-          red:
-            min: 225
+          green: { max: 150 }
+          yellow: { min: 150, max: 225 }
+          red: { min: 225 }
+      
       "7d":
         labels:
           - "ultimi 7 giorni"
           - "ultima settimana"
         thresholds:
-          green:
-            max: 150
-          yellow:
-            min: 150
-            max: 225
-          red:
-            min: 225
+          green: { max: 150 }
+          yellow: { min: 150, max: 225 }
+          red: { min: 225 }
+      
       "15d":
         labels:
           - "ultimi 15 giorni"
           - "ultime due settimane"
         thresholds:
-          green:
-            max: 150
-          yellow:
-            min: 150
-            max: 225
-          red:
-            min: 225
+          green: { max: 150 }
+          yellow: { min: 150, max: 225 }
+          red: { min: 225 }
+      
       "30d":
         labels:
           - "ultimi 30 giorni"
           - "ultimo mese"
         thresholds:
-          green:
-            max: 175
-          yellow:
-            min: 175
-            max: 300
-          red:
-            min: 300
+          green: { max: 175 }
+          yellow: { min: 175, max: 300 }
+          red: { min: 300 }
 
     # Severity level descriptions (Protezione Civile terminology)
     severity_levels:
       red:
         description: "Criticità elevata - rainfall exceeds red threshold"
-        action: "Emergency protocols active"
       yellow:
         description: "Criticità moderata - rainfall exceeds yellow threshold"
-        action: "Enhanced monitoring required"
       green:
         description: "Criticità ordinaria - rainfall within normal parameters"
-        action: "Standard monitoring"

@@ -17,8 +17,11 @@ from services.web.base import BrowserConfig
 class OMIRLAdapter:
     """Native OMIRL scraper - builds Pydantic models directly from DOM."""
     
-    URL = "https://omirl.regione.liguria.it/#/alertzones"
-    ZONA_TABLE_MAP = {4: "A", 5: "B", 6: "C", 7: "D", 8: "E"}
+    HYDRO_URL = "https://omirl.regione.liguria.it/#/alertzones"
+    # Zone letters (A-E): A=Marittimi Ponente, B=Marittimi Centro, C=Marittimi Levante, D=Padani Ponente, E=Padani Levante
+    HYDRO_TABLE_MAP = {4: "A", 5: "B", 6: "C", 7: "D", 8: "E"}
+    RAIN_URL = "https://omirl.regione.liguria.it/#/maxtable"
+    RAIN_TABLE_MAP = {4: "zona", 5: "provincia"}
     
     async def fetch_livelli_idrometrici(self) -> List[RawHydroStation]:
         """
@@ -36,8 +39,8 @@ class OMIRLAdapter:
             context = await browser_manager.get_context("livelli_idro")
             page = await context.new_page()
             
-            print(f"\n🌊 Scraping {self.URL}")
-            await browser_manager.navigate_with_retry(page, self.URL)
+            print(f"\n🌊 Scraping {self.HYDRO_URL}")
+            await browser_manager.navigate_with_retry(page, self.HYDRO_URL)
             
             # Wait for AngularJS rendering
             await page.wait_for_timeout(3000)
@@ -54,10 +57,10 @@ class OMIRLAdapter:
             
             # Parse zona tables (indices 4-8)
             all_stations = []
-            for table_idx, zona in self.ZONA_TABLE_MAP.items():
+            for table_idx, zona in self.HYDRO_TABLE_MAP.items():
                 if table_idx >= len(tables):
                     continue
-                stations = await self._parse_table(tables[table_idx], zona)
+                stations = await self._parse_hydro_table(tables[table_idx], zona)
                 print(f"  Zona {zona}: {len(stations)} stations")
                 all_stations.extend(stations)
             
@@ -68,7 +71,7 @@ class OMIRLAdapter:
             # IMPORTANT: Close ALL browser resources to prevent hanging
             await browser_manager.close_all()
     
-    async def _parse_table(self, table: ElementHandle, zona: str) -> List[RawHydroStation]:
+    async def _parse_hydro_table(self, table: ElementHandle, zona: str) -> List[RawHydroStation]:
         """Parse table rows directly into Pydantic models."""
         stations = []
         rows = await table.query_selector_all('tr')
@@ -82,15 +85,6 @@ class OMIRLAdapter:
             texts = [await cell.inner_text() for cell in cells]
             texts = [t.strip() for t in texts]
             
-            # Extract station code from località (e.g., "Airole [AIROL]")
-            localita = texts[0]
-            code_match = re.search(r'\[([A-Z]+)\]', localita)
-            if not code_match:
-                continue
-            
-            station_code = code_match.group(1)
-            localita_clean = localita.replace(f"[{station_code}]", "").strip()
-            
             # Parse levels (Italian format: "2,34" → 2.34)
             def parse_level(text: str) -> float:
                 if not text or text == '-':
@@ -101,16 +95,15 @@ class OMIRLAdapter:
                     return None
             
             stations.append(RawHydroStation(
-                station_code=station_code,
-                localita=localita_clean,
+                localita=texts[0],  # Keep raw format: "Tiglieto [TIGLT]"
                 provincia=texts[1],
                 comune=texts[2],
                 bacino=texts[3],
                 corso_acqua=texts[4],
                 max_24h=parse_level(texts[5]),
                 max_24h_time=texts[6],
-                current_level=parse_level(texts[7]),
-                current_time=texts[8],
+                last_level=parse_level(texts[7]),
+                reference_time=texts[8],
                 zona_allerta=zona
             ))
         
@@ -133,9 +126,8 @@ class OMIRLAdapter:
             context = await browser_manager.get_context("precipitazioni")
             page = await context.new_page()
             
-            url = "https://omirl.regione.liguria.it/#/maxtable"
-            print(f"\n🌧️  Scraping {url}")
-            await browser_manager.navigate_with_retry(page, url)
+            print(f"\n🌧️  Scraping {self.RAIN_URL}")
+            await browser_manager.navigate_with_retry(page, self.RAIN_URL)
             
             # Wait for AngularJS rendering
             await page.wait_for_timeout(3000)
@@ -152,17 +144,13 @@ class OMIRLAdapter:
             
             all_data = []
             
-            # Parse zone table (index 4 - zones A-E)
-            if len(tables) > 4:
-                zone_data = await self._parse_rain_table(tables[4], "zona")
-                print(f"  Zone: {len(zone_data)} entries")
-                all_data.extend(zone_data)
-            
-            # Parse province table (index 5 - Genova, Imperia, Savona, La Spezia)
-            if len(tables) > 5:
-                prov_data = await self._parse_rain_table(tables[5], "provincia")
-                print(f"  Province: {len(prov_data)} entries")
-                all_data.extend(prov_data)
+            # Parse rain tables using map
+            for table_idx, location_type in self.RAIN_TABLE_MAP.items():
+                if table_idx >= len(tables):
+                    continue
+                table_data = await self._parse_rain_table(tables[table_idx], location_type)
+                print(f"  {location_type.capitalize()}: {len(table_data)} entries")
+                all_data.extend(table_data)
             
             print(f"✅ Scraped {len(all_data)} rain data entries")
             return all_data
@@ -172,7 +160,7 @@ class OMIRLAdapter:
     
     
     async def _parse_rain_table(self, table: ElementHandle, location_type: str) -> List[RawRainData]:
-        """Parse rain table rows into Pydantic models."""
+        """Parse rain table rows into Pydantic models - one entry per time period."""
         data = []
         rows = await table.query_selector_all('tr')
         
@@ -200,29 +188,38 @@ class OMIRLAdapter:
             if not location:
                 continue
             
-            # Parse accumulation values - format: "6.8 [05:10] Seborga"
-            def parse_rain_cell(text: str) -> float:
-                if not text or text == '-':
-                    return None
-                try:
-                    # Extract first number before the bracket
-                    parts = text.split('[')[0].strip()
-                    # Handle Italian format and non-breaking spaces
-                    parts = parts.replace('\xa0', '').replace(',', '.').strip()
-                    return float(parts) if parts else None
-                except:
-                    return None
-            
-            accumulations = {}
+            # Parse each time period cell: "0.4 [09:20] Pieve di Teco"
             for i, period in enumerate(time_periods):
-                if i + 1 < len(texts):
-                    accumulations[period] = parse_rain_cell(texts[i + 1])
-            
-            data.append(RawRainData(
-                location=location,
-                location_type=location_type,
-                accumulation_mm=accumulations
-            ))
+                if i + 1 >= len(texts):
+                    continue
+                
+                cell_text = texts[i + 1]
+                if not cell_text or cell_text == '-':
+                    continue
+                
+                try:
+                    # Split by brackets to extract: "0.4 [09:20] Pieve di Teco"
+                    # Format: value [time] station
+                    match = re.match(r'([\d,\.]+)\s*\[([^\]]+)\]\s*(.+)', cell_text)
+                    if not match:
+                        continue
+                    
+                    max_mm_str, max_time, max_station = match.groups()
+                    
+                    # Parse accumulation (handle Italian decimal format)
+                    max_mm_str = max_mm_str.replace('\xa0', '').replace(',', '.').strip()
+                    max_mm = float(max_mm_str)
+                    
+                    data.append(RawRainData(
+                        location=location,
+                        location_type=location_type,
+                        time_period=period,
+                        max_mm=max_mm,
+                        max_time=max_time.strip(),
+                        max_station=max_station.strip()
+                    ))
+                except (ValueError, AttributeError):
+                    continue
         
         return data
 

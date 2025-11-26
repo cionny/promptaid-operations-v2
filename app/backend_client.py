@@ -239,7 +239,7 @@ class BackendClient:
             if result.stations:
                 df = pd.DataFrame([
                     {
-                        "Località": s.localita,
+                        "Località": s.station,
                         "Provincia": s.provincia,
                         "Comune": s.comune,
                         "Bacino": s.bacino,
